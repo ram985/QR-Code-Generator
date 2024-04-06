@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <!-- Include Bootstrap for styling -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 50px; /* Add some top padding to the body */
+            position: relative; /* Position the container relatively */
+            overflow: hidden; /* Hide overflow to prevent scrollbars */
+            background: linear-gradient(45deg, #ff8a00, #e52e71, #faa307, #1e90ff); /* Gradient background with vibrant colors */
+            background-size: 400% 400%; /* Background size for gradient animation */
+            animation: gradientAnimation 15s ease infinite; /* Gradient animation */
+        }
+
+        /* Gradient animation */
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .bubble-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Place the bubble container behind other content */
+        }
+
+        /* Create bubble animation */
+        @keyframes bubbleAnimation {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-100%);
+            }
+        }
+
+        .bubble {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
+            animation: bubbleAnimation 10s linear infinite;
+        }
+
+        /* Position bubbles randomly */
+        .bubble:nth-child(1) {
+            top: 10%;
+            left: 10%;
+        }
+
+        .bubble:nth-child(2) {
+            top: 20%;
+            left: 20%;
+        }
+
+        .bubble:nth-child(3) {
+            top: 30%;
+            left: 30%;
+        }
+
+        /* Add more bubbles as needed */
+        /* .bubble:nth-child(n) {
+            top: y%;
+            left: x%;
+        } */
+
+        .qr-code {
+            max-width: 200px;
+            margin: 10px auto; /* Center the QR code */
+        }
+
+        .form-horizontal {
+            max-width: 600px;
+            margin: 0 auto; /* Center the form */
+        }
+
+        .generate-btn {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bubble-container">
+        <!-- Create bubbles -->
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <!-- Add more bubbles as needed -->
+        <!-- <div class="bubble"></div> -->
+    </div>
+
+    <div class="container">
+        <div class="text-center">
+            <!-- Get a Placeholder image initially,
+            this will change according to the
+            data entered later -->
+            <img src="https://chart.googleapis.com/chart?cht=qr&chl=Hello+World&chs=160x160&chld=L|0"
+                class="qr-code img-thumbnail img-responsive" />
+        </div>
+
+        <form class="form-horizontal" id="qr-form">
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="content">Content:</label>
+                <div class="col-sm-10">
+                    <!-- Input box to enter the required data -->
+                    <input type="text" size="60" maxlength="60" class="form-control" id="content"
+                        placeholder="Enter content">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <!-- Button to generate QR Code for the entered data -->
+                    <button type="button" class="btn btn-primary generate-btn" id="generate">Generate</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <script>
+        // Function to HTML encode the text
+        // This creates a new hidden element,
+        // inserts the given text into it 
+        // and outputs it out as HTML
+        function htmlEncode(value) {
+            return $('<div/>').text(value).html();
+        }
+
+        $(function () {
+            // Specify an onclick function
+            // for the generate button
+            $('#generate').click(function () {
+                // Generate the link that would be
+                // used to generate the QR Code
+                // with the given data 
+                let finalURL = 'https://chart.googleapis.com/chart?cht=qr&chl=' +
+                    htmlEncode($('#content').val()) +
+                    '&chs=160x160&chld=L|0'
+
+                // Replace the src of the image with
+                // the QR code image
+                $('.qr-code').attr('src', finalURL);
+            });
+        });
+    </script>
+</body>
+
+</html>
